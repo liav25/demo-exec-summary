@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ report_title }}</title>
+    <style>
+        body {
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            font-size: 11pt;
+            line-height: 1.4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .header {
+            border-bottom: 2px solid #1f77b4;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .logo {
+            max-height: 60px;
+            max-width: 200px;
+            margin-bottom: 10px;
+        }
+        
+        .company-name {
+            font-size: 18pt;
+            font-weight: bold;
+            color: #1f77b4;
+            margin: 10px 0;
+        }
+        
+        .report-title {
+            font-size: 24pt;
+            font-weight: bold;
+            color: #2c3e50;
+            margin: 15px 0;
+        }
+        
+        .report-subtitle {
+            font-size: 14pt;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .metadata {
+            font-size: 10pt;
+            color: #666;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #1f77b4;
+            font-size: 20pt;
+            margin: 30px 0 15px 0;
+            page-break-after: avoid;
+        }
+        
+        h2 {
+            color: #2c3e50;
+            font-size: 16pt;
+            margin: 25px 0 15px 0;
+            page-break-after: avoid;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+        }
+        
+        h3 {
+            color: #34495e;
+            font-size: 14pt;
+            margin: 20px 0 10px 0;
+            page-break-after: avoid;
+        }
+        
+        .executive-summary {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-left: 4px solid #1f77b4;
+            margin: 20px 0;
+            page-break-inside: avoid;
+        }
+        
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .kpi-card {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            text-align: center;
+            page-break-inside: avoid;
+        }
+        
+        .kpi-value {
+            font-size: 24pt;
+            font-weight: bold;
+            color: #1f77b4;
+            margin: 5px 0;
+        }
+        
+        .kpi-label {
+            font-size: 10pt;
+            color: #666;
+            text-transform: uppercase;
+        }
+        
+        .chart-container {
+            margin: 20px 0;
+            page-break-inside: avoid;
+            text-align: center;
+        }
+        
+        .chart-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #2c3e50;
+            font-size: 14pt;
+        }
+        
+        .chart-explanation {
+            margin-top: 15px;
+            font-style: italic;
+            color: #666;
+            font-size: 10pt;
+            text-align: left;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+        
+        .findings-list {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .findings-list h3 {
+            color: #856404;
+            margin-top: 0;
+        }
+        
+        .findings-list ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        
+        .findings-list li {
+            margin: 8px 0;
+        }
+        
+        .recommendations {
+            background-color: #d1ecf1;
+            border: 1px solid #bee5eb;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .recommendations h3 {
+            color: #0c5460;
+            margin-top: 0;
+        }
+        
+        .recommendations ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        
+        .recommendations li {
+            margin: 8px 0;
+        }
+        
+        .section {
+            margin: 30px 0;
+            page-break-inside: avoid;
+        }
+        
+        .page-break {
+            page-break-before: always;
+        }
+        
+        .footer-metadata {
+            font-size: 9pt;
+            color: #666;
+            border-top: 1px solid #ddd;
+            padding-top: 15px;
+            margin-top: 40px;
+            text-align: center;
+        }
+        
+        /* Status indicators */
+        .status-critical {
+            color: #d62728;
+            font-weight: bold;
+        }
+        
+        .status-high {
+            color: #ff7f0e;
+            font-weight: bold;
+        }
+        
+        .status-medium {
+            color: #2ca02c;
+        }
+        
+        .status-low {
+            color: #1f77b4;
+        }
+        
+        .status-resolved {
+            color: #2ca02c;
+            font-weight: bold;
+        }
+        
+        .status-investigating {
+            color: #ff7f0e;
+            font-weight: bold;
+        }
+        
+        /* Table styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        {% if logo_path %}
+        <img src="{{ logo_path }}" alt="Company Logo" class="logo">
+        {% endif %}
+        <div class="company-name">{{ company_name }}</div>
+        <div class="report-title">{{ report_title }}</div>
+        <div class="report-subtitle">{{ period_description }}</div>
+        <div class="metadata">
+            Generated on {{ generation_date }}<br>
+            Report Period: {{ report_period }}
+        </div>
+    </div>
+
+    <!-- Executive Summary -->
+    <div class="section">
+        <h1>Executive Summary</h1>
+        <div class="executive-summary">
+            {{ executive_summary | safe }}
+        </div>
+    </div>
+
+    <!-- Key Performance Indicators -->
+    {% if kpi_data %}
+    <div class="section">
+        <h1>Key Performance Indicators</h1>
+        <div class="kpi-grid">
+            {% for kpi in kpi_data %}
+            <div class="kpi-card">
+                <div class="kpi-value">{{ kpi.value }}</div>
+                <div class="kpi-label">{{ kpi.label }}</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Key Findings -->
+    {% if key_findings %}
+    <div class="section">
+        <div class="findings-list">
+            <h3>🔍 Key Findings</h3>
+            <ul>
+                {% for finding in key_findings %}
+                <li>{{ finding }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Charts and Visualizations -->
+    {% if charts %}
+    <div class="page-break"></div>
+    <div class="section">
+        <h1>Data Analysis & Visualizations</h1>
+        
+        {% for chart in charts %}
+        <div class="chart-container">
+            <div class="chart-title">{{ chart.title }}</div>
+            {{ chart.html | safe }}
+            {% if chart.explanation %}
+            <div class="chart-explanation">
+                {{ chart.explanation }}
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Detailed Analysis Sections -->
+    {% if analysis_sections %}
+    <div class="page-break"></div>
+    {% for section in analysis_sections %}
+    <div class="section">
+        <h1>{{ section.title }}</h1>
+        {{ section.content | safe }}
+        
+        {% if section.chart %}
+        <div class="chart-container">
+            {{ section.chart | safe }}
+        </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    <!-- Recommendations -->
+    {% if recommendations %}
+    <div class="section">
+        <div class="recommendations">
+            <h3>💡 Recommendations</h3>
+            <ul>
+                {% for recommendation in recommendations %}
+                <li>{{ recommendation }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Additional Data Tables -->
+    {% if data_tables %}
+    <div class="page-break"></div>
+    <div class="section">
+        <h1>Detailed Data</h1>
+        {% for table in data_tables %}
+        <h2>{{ table.title }}</h2>
+        {{ table.html | safe }}
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Footer -->
+    <div class="footer-metadata">
+        <strong>Confidential Report</strong><br>
+        Generated by Gen AI Security Report Generator<br>
+        {{ generation_date }} | {{ company_name }}<br>
+        <em>This report contains AI-generated insights based on security data analysis</em>
+    </div>
+</body>
+</html> 

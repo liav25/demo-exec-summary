@@ -1,0 +1,285 @@
+{% extends "base.html" %}
+
+{% block title %}Security Report Generator - Request Report{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Hero Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="hero-section bg-gradient text-white p-5 rounded">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h1 class="display-4 fw-bold mb-3">
+                            <i class="fas fa-chart-line me-3"></i>
+                            AI-Powered Security Reports
+                        </h1>
+                        <p class="lead mb-4">
+                            Generate comprehensive, executive-level security reports with AI-driven insights, 
+                            interactive visualizations, and actionable recommendations.
+                        </p>
+                        <div class="d-flex flex-wrap gap-3">
+                            <span class="badge bg-light text-dark fs-6 px-3 py-2">
+                                <i class="fas fa-robot me-1"></i>AI-Generated Insights
+                            </span>
+                            <span class="badge bg-light text-dark fs-6 px-3 py-2">
+                                <i class="fas fa-chart-bar me-1"></i>Interactive Charts
+                            </span>
+                            <span class="badge bg-light text-dark fs-6 px-3 py-2">
+                                <i class="fas fa-file-pdf me-1"></i>Professional PDFs
+                            </span>
+                            <span class="badge bg-light text-dark fs-6 px-3 py-2">
+                                <i class="fas fa-envelope me-1"></i>Email Delivery
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <i class="fas fa-shield-alt display-1 opacity-75"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Report Request Form -->
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="card-title mb-0">
+                        <i class="fas fa-file-alt me-2"></i>
+                        Request Security Report
+                    </h3>
+                </div>
+                
+                <div class="card-body p-4">
+                    <form method="POST" action="{{ url_for('generate_report') }}" id="reportForm">
+                        <!-- Recipient Email -->
+                        <div class="mb-4">
+                            <label for="recipient_email" class="form-label fw-bold">
+                                <i class="fas fa-envelope me-1"></i>Recipient Email Address
+                            </label>
+                            <input type="email" class="form-control form-control-lg" id="recipient_email" 
+                                   name="recipient_email" required 
+                                   placeholder="executive@company.com">
+                            <div class="form-text">The report will be sent to this email address</div>
+                        </div>
+
+                        <!-- Report Type -->
+                        <div class="mb-4">
+                            <label for="report_type" class="form-label fw-bold">
+                                <i class="fas fa-list me-1"></i>Report Type
+                            </label>
+                            <select class="form-select form-select-lg" id="report_type" name="report_type" required>
+                                <option value="">Select a report type...</option>
+                                <option value="quarterly_review">Quarterly Security Review</option>
+                                <option value="monthly_threat">Monthly Threat Overview</option>
+                                <option value="phishing_deep_dive">Phishing Deep Dive</option>
+                                <option value="compliance_status">Compliance Status Report</option>
+                                <option value="incident_response">Incident Response Summary</option>
+                            </select>
+                            <div class="form-text">Choose the type of security report you need</div>
+                        </div>
+
+                        <!-- Time Period -->
+                        <div class="mb-4">
+                            <label for="time_period" class="form-label fw-bold">
+                                <i class="fas fa-calendar me-1"></i>Time Period
+                            </label>
+                            <select class="form-select form-select-lg" id="time_period" name="time_period" required>
+                                <option value="">Select time period...</option>
+                                <option value="last_quarter">Last Quarter</option>
+                                <option value="last_month">Last Month</option>
+                                <option value="last_6_months">Last 6 Months</option>
+                                <option value="ytd">Year to Date</option>
+                            </select>
+                            <div class="form-text">Select the reporting period for analysis</div>
+                        </div>
+
+                        <!-- Focus Areas -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">
+                                <i class="fas fa-bullseye me-1"></i>Key Areas of Focus (Optional)
+                            </label>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" name="focus_areas" 
+                                               value="Phishing Statistics" id="focus1">
+                                        <label class="form-check-label" for="focus1">
+                                            Phishing Statistics
+                                        </label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" name="focus_areas" 
+                                               value="Malware Incidents" id="focus2">
+                                        <label class="form-check-label" for="focus2">
+                                            Malware Incidents
+                                        </label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" name="focus_areas" 
+                                               value="Endpoint Compliance" id="focus3">
+                                        <label class="form-check-label" for="focus3">
+                                            Endpoint Compliance
+                                        </label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" name="focus_areas" 
+                                               value="Network Security" id="focus4">
+                                        <label class="form-check-label" for="focus4">
+                                            Network Security
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" name="focus_areas" 
+                                               value="Data Protection" id="focus5">
+                                        <label class="form-check-label" for="focus5">
+                                            Data Protection
+                                        </label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" name="focus_areas" 
+                                               value="Access Management" id="focus6">
+                                        <label class="form-check-label" for="focus6">
+                                            Access Management
+                                        </label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" name="focus_areas" 
+                                               value="Vulnerability Management" id="focus7">
+                                        <label class="form-check-label" for="focus7">
+                                            Vulnerability Management
+                                        </label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" name="focus_areas" 
+                                               value="Security Training" id="focus8">
+                                        <label class="form-check-label" for="focus8">
+                                            Security Training
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-text">Select specific areas you want the report to emphasize</div>
+                        </div>
+
+                        <!-- Specific Questions -->
+                        <div class="mb-4">
+                            <label for="specific_questions" class="form-label fw-bold">
+                                <i class="fas fa-question-circle me-1"></i>Specific Questions (Optional)
+                            </label>
+                            <textarea class="form-control" id="specific_questions" name="specific_questions" 
+                                      rows="3" placeholder="e.g., What are our top 3 security risks this quarter? How has our phishing success rate changed?"></textarea>
+                            <div class="form-text">Ask specific questions you'd like the AI to address in the report</div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
+                                <i class="fas fa-magic me-2"></i>
+                                Generate AI Report
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <h2 class="text-center mb-4">What You'll Get</h2>
+            <div class="row g-4">
+                <div class="col-md-3">
+                    <div class="text-center">
+                        <div class="feature-icon bg-primary text-white rounded-circle mx-auto mb-3">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h5>AI-Generated Insights</h5>
+                        <p class="text-muted">Intelligent analysis and executive summaries powered by OpenAI</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="text-center">
+                        <div class="feature-icon bg-success text-white rounded-circle mx-auto mb-3">
+                            <i class="fas fa-chart-pie"></i>
+                        </div>
+                        <h5>Interactive Charts</h5>
+                        <p class="text-muted">Beautiful visualizations created with Plotly for clear data presentation</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="text-center">
+                        <div class="feature-icon bg-warning text-white rounded-circle mx-auto mb-3">
+                            <i class="fas fa-file-pdf"></i>
+                        </div>
+                        <h5>Professional PDFs</h5>
+                        <p class="text-muted">Polished, executive-ready reports with consistent branding</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="text-center">
+                        <div class="feature-icon bg-info text-white rounded-circle mx-auto mb-3">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                        <h5>Instant Delivery</h5>
+                        <p class="text-muted">Reports generated and delivered to your inbox within minutes</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Loading Modal -->
+<div class="modal fade" id="loadingModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center p-4">
+                <div class="spinner-border text-primary mb-3" role="status" style="width: 3rem; height: 3rem;">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <h5>Generating Your Report</h5>
+                <p class="mb-0">Please wait while we analyze your data and create your AI-powered security report...</p>
+                <div class="progress mt-3">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.getElementById('reportForm').addEventListener('submit', function(e) {
+    // Show loading modal
+    var loadingModal = new bootstrap.Modal(document.getElementById('loadingModal'));
+    loadingModal.show();
+    
+    // Disable submit button
+    document.getElementById('submitBtn').disabled = true;
+});
+
+// Add form validation feedback
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('reportForm');
+    const inputs = form.querySelectorAll('input[required], select[required]');
+    
+    inputs.forEach(input => {
+        input.addEventListener('blur', function() {
+            if (this.value.trim() === '') {
+                this.classList.add('is-invalid');
+            } else {
+                this.classList.remove('is-invalid');
+                this.classList.add('is-valid');
+            }
+        });
+    });
+});
+</script>
+{% endblock %} 
