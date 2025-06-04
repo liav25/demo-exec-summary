@@ -12,28 +12,70 @@ class ChartGenerator:
     """Generates interactive charts using Plotly for security reports"""
 
     def __init__(self):
-        # Define color schemes for consistent branding
+        # Define color schemes for consistent branding using soft, beautiful palette
         self.color_scheme = {
-            "primary": "#0080ff",  # Electric Blue
-            "secondary": "#39ff14",  # Cyber Green
-            "success": "#39ff14",  # Cyber Green
-            "warning": "#ff4444",
-            "info": "#0080ff",  # Electric Blue
-            "critical": "#ff4444",
-            "rich_black": "#0a0a0a",
-            "white": "#ffffff",
+            # Primary colors from the beautiful palette
+            "primary": "#1C4E80",  # Deep Blue
+            "secondary": "#4CB5F5",  # Sky Blue
+            "success": "#6AB187",  # Sage Green
+            "warning": "#DBAE58",  # Golden Yellow
+            "info": "#A5D8DD",  # Soft Teal
+            "critical": "#AC3E31",  # Warm Red
+            "accent": "#488A99",  # Teal
+            # Neutral tones
+            "rich_black": "#23282D",  # Dark Charcoal
+            "charcoal": "#484848",  # Medium Charcoal
+            "slate": "#7E909A",  # Blue Gray
+            "light_gray": "#CED2CC",  # Light Gray
+            "off_white": "#F1F1F1",  # Off White
+            "white": "#FFFFFF",  # Pure White
+            "cream": "#DADADA",  # Light Cream
+            # Severity color mapping with soft palette
             "severity_colors": {
-                "Critical": "#ff4444",
-                "High": "#0080ff",  # Electric Blue
-                "Medium": "#39ff14",  # Cyber Green
-                "Low": "#0a0a0a",  # Rich Black
+                "Critical": "#AC3E31",  # Warm Red
+                "High": "#1C4E80",  # Deep Blue
+                "Medium": "#DBAE58",  # Golden Yellow
+                "Low": "#6AB187",  # Sage Green
+                "Info": "#A5D8DD",  # Soft Teal
             },
+            # Status colors with soft palette
             "status_colors": {
-                "Resolved": "#39ff14",  # Cyber Green
-                "Investigating": "#0080ff",  # Electric Blue
-                "Monitoring": "#ff4444",
-                "Blocked": "#0a0a0a",  # Rich Black
-                "Contained": "#0080ff",  # Electric Blue
+                "Resolved": "#6AB187",  # Sage Green
+                "Investigating": "#4CB5F5",  # Sky Blue
+                "Monitoring": "#DBAE58",  # Golden Yellow
+                "Blocked": "#AC3E31",  # Warm Red
+                "Contained": "#488A99",  # Teal
+                "Active": "#1C4E80",  # Deep Blue
+                "Pending": "#7E909A",  # Blue Gray
+            },
+            # Beautiful gradient combinations
+            "gradients": [
+                ["#A5D8DD", "#4CB5F5"],  # Teal to Sky Blue
+                ["#6AB187", "#DBAE58"],  # Green to Gold
+                ["#1C4E80", "#488A99"],  # Deep Blue to Teal
+                ["#F1F1F1", "#CED2CC"],  # Light Gray gradient
+                ["#DBAE58", "#AC3E31"],  # Gold to Red
+            ],
+            # Chart-specific color palettes
+            "chart_palette": [
+                "#1C4E80",  # Deep Blue
+                "#4CB5F5",  # Sky Blue
+                "#6AB187",  # Sage Green
+                "#DBAE58",  # Golden Yellow
+                "#A5D8DD",  # Soft Teal
+                "#488A99",  # Teal
+                "#AC3E31",  # Warm Red
+                "#7E909A",  # Blue Gray
+                "#23282D",  # Dark Charcoal
+                "#CED2CC",  # Light Gray
+            ],
+            # Soft background colors for different chart types
+            "backgrounds": {
+                "light": "#F1F1F1",
+                "subtle": "rgba(241, 241, 241, 0.3)",
+                "accent": "rgba(165, 216, 221, 0.1)",
+                "warm": "rgba(219, 174, 88, 0.1)",
+                "cool": "rgba(76, 181, 245, 0.1)",
             },
         }
 
@@ -52,6 +94,34 @@ class ChartGenerator:
         if use_static_for_pdf is None:
             use_static_for_pdf = self.pdf_mode
 
+        # Apply beautiful styling to all charts
+        fig.update_layout(
+            paper_bgcolor=self.color_scheme["white"],
+            plot_bgcolor=self.color_scheme["backgrounds"]["light"],
+            font=dict(
+                family="Inter, -apple-system, BlinkMacSystemFont, sans-serif",
+                size=12,
+                color=self.color_scheme["rich_black"],
+            ),
+            title=dict(
+                font=dict(
+                    family="Source Serif Pro, serif",
+                    size=16,
+                    color=self.color_scheme["rich_black"],
+                ),
+                x=0.5,
+                y=0.95,
+            ),
+            margin=dict(l=60, r=60, t=80, b=60),
+            showlegend=True,
+            legend=dict(
+                bgcolor="rgba(255, 255, 255, 0.9)",
+                bordercolor=self.color_scheme["light_gray"],
+                borderwidth=1,
+                font=dict(size=11),
+            ),
+        )
+
         try:
             if use_static_for_pdf:
                 # Following the Plotly PDF documentation approach
@@ -68,7 +138,7 @@ class ChartGenerator:
                 # Create HTML template following Plotly documentation pattern
                 template = f"""
                 <div id="{div_id}" style="text-align: center; margin: 20px 0;">
-                    <img style="width: {width}px; height: {height}px; max-width: 100%; height: auto; border: 1px solid #ddd;" 
+                    <img style="width: {width}px; height: {height}px; max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);" 
                          src="data:image/png;base64,{img_base64}" 
                          alt="Chart: {div_id}" />
                 </div>
@@ -95,28 +165,41 @@ class ChartGenerator:
         if events_df.empty:
             return self._create_empty_chart("No security events data available")
 
-        # Create subplot with secondary y-axis
+        # Create subplot with beautiful styling
         fig = make_subplots(
             rows=1,
             cols=2,
             subplot_titles=("Events by Type", "Events by Severity"),
             specs=[[{"type": "bar"}, {"type": "pie"}]],
+            horizontal_spacing=0.15,
         )
 
-        # Events by type
+        # Events by type with gradient colors
         event_counts = events_df["event_type"].value_counts()
+
+        # Create gradient bar colors
+        bar_colors = []
+        for i, event_type in enumerate(event_counts.index):
+            color_index = i % len(self.color_scheme["chart_palette"])
+            bar_colors.append(self.color_scheme["chart_palette"][color_index])
+
         fig.add_trace(
             go.Bar(
                 x=event_counts.index,
                 y=event_counts.values,
                 name="Event Count",
-                marker_color=self.color_scheme["primary"],
+                marker=dict(
+                    color=bar_colors,
+                    line=dict(color=self.color_scheme["light_gray"], width=1),
+                    pattern=dict(shape=""),
+                ),
+                hovertemplate="<b>%{x}</b><br>Count: %{y}<extra></extra>",
             ),
             row=1,
             col=1,
         )
 
-        # Events by severity (pie chart)
+        # Events by severity (pie chart) with beautiful colors
         severity_counts = events_df["severity"].value_counts()
         colors = [
             self.color_scheme["severity_colors"].get(sev, self.color_scheme["primary"])
@@ -128,7 +211,11 @@ class ChartGenerator:
                 labels=severity_counts.index,
                 values=severity_counts.values,
                 name="Severity Distribution",
-                marker_colors=colors,
+                marker=dict(
+                    colors=colors, line=dict(color=self.color_scheme["white"], width=2)
+                ),
+                hole=0.3,  # Donut chart for modern look
+                hovertemplate="<b>%{label}</b><br>Count: %{value}<br>Percentage: %{percent}<extra></extra>",
             ),
             row=1,
             col=2,
@@ -136,13 +223,24 @@ class ChartGenerator:
 
         fig.update_layout(
             title_text="Security Events Overview",
-            showlegend=True,
-            height=400,
-            font=dict(size=12),
+            height=450,
         )
 
-        fig.update_xaxes(title_text="Event Type", row=1, col=1)
-        fig.update_yaxes(title_text="Number of Events", row=1, col=1)
+        fig.update_xaxes(
+            title_text="Event Type",
+            row=1,
+            col=1,
+            tickangle=-45,
+            gridcolor=self.color_scheme["light_gray"],
+            gridwidth=1,
+        )
+        fig.update_yaxes(
+            title_text="Number of Events",
+            row=1,
+            col=1,
+            gridcolor=self.color_scheme["light_gray"],
+            gridwidth=1,
+        )
 
         return self._generate_chart_html(fig, "security_events_overview")
 
@@ -164,13 +262,30 @@ class ChartGenerator:
             color="severity",
             title="Security Events Timeline",
             color_discrete_map=self.color_scheme["severity_colors"],
+            markers=True,
+        )
+
+        # Enhance the timeline with better styling
+        fig.update_traces(
+            line=dict(width=3),
+            marker=dict(size=8, line=dict(width=2, color=self.color_scheme["white"])),
         )
 
         fig.update_layout(
-            xaxis_title="Month",
-            yaxis_title="Number of Events",
             height=400,
-            font=dict(size=12),
+            xaxis=dict(
+                title="Month",
+                gridcolor=self.color_scheme["light_gray"],
+                gridwidth=1,
+                showgrid=True,
+            ),
+            yaxis=dict(
+                title="Number of Events",
+                gridcolor=self.color_scheme["light_gray"],
+                gridwidth=1,
+                showgrid=True,
+            ),
+            hovermode="x unified",
         )
 
         return self._generate_chart_html(fig, "events_timeline")
@@ -401,109 +516,162 @@ class ChartGenerator:
         return self._generate_chart_html(fig, "compliance_dashboard")
 
     def create_kpi_cards(self, metrics: Dict) -> str:
-        """Create KPI visualization cards"""
-        try:
-            # Extract key metrics
-            kpi_data = []
+        """Create beautiful KPI cards with improved styling"""
 
-            if "security_metrics" in metrics:
-                sec = metrics["security_metrics"]
-                kpi_data.extend(
-                    [
-                        {
-                            "label": "Total Events",
-                            "value": sec.get("total_events", 0),
-                            "trend": "neutral",
-                        },
-                        {
-                            "label": "Critical Events",
-                            "value": sec.get("critical_events", 0),
-                            "trend": "warning",
-                        },
-                        {
-                            "label": "Resolution Rate",
-                            "value": f"{sec.get('resolution_rate', 0):.1f}%",
-                            "trend": "success",
-                        },
-                    ]
-                )
+        kpis = []
 
-            if "phishing_metrics" in metrics:
-                phish = metrics["phishing_metrics"]
-                kpi_data.extend(
-                    [
-                        {
-                            "label": "Phishing Campaigns",
-                            "value": phish.get("total_campaigns", 0),
-                            "trend": "info",
-                        },
-                        {
-                            "label": "Emails Blocked",
-                            "value": phish.get("total_blocked", 0),
-                            "trend": "success",
-                        },
-                    ]
-                )
-
-            if "compliance_metrics" in metrics:
-                comp = metrics["compliance_metrics"]
-                kpi_data.extend(
-                    [
-                        {
-                            "label": "Compliance Rate",
-                            "value": f"{comp.get('compliance_rate', 0):.1f}%",
-                            "trend": "success",
-                        },
-                        {
-                            "label": "Total Controls",
-                            "value": comp.get("total_controls", 0),
-                            "trend": "info",
-                        },
-                    ]
-                )
-
-            if not kpi_data:
-                return self._create_empty_chart("No KPI data available")
-
-            # Create a simple bar chart for KPIs
-            labels = [kpi["label"] for kpi in kpi_data]
-            values = []
-
-            for kpi in kpi_data:
-                val = kpi["value"]
-                if isinstance(val, str) and "%" in val:
-                    values.append(float(val.replace("%", "")))
-                else:
-                    values.append(
-                        float(val) if str(val).replace(".", "").isdigit() else 0
-                    )
-
-            fig = go.Figure(
-                data=[
-                    go.Bar(
-                        x=labels,
-                        y=values,
-                        marker_color=self.color_scheme["primary"],
-                        text=[str(kpi["value"]) for kpi in kpi_data],
-                        textposition="auto",
-                    )
+        # Security metrics KPIs
+        if "security_metrics" in metrics:
+            sec_metrics = metrics["security_metrics"]
+            kpis.extend(
+                [
+                    {
+                        "title": "Total Security Events",
+                        "value": sec_metrics.get("total_events", 0),
+                        "color": self.color_scheme["primary"],
+                        "icon": "🛡️",
+                        "trend": "neutral",
+                    },
+                    {
+                        "title": "Critical Events",
+                        "value": sec_metrics.get("critical_events", 0),
+                        "color": self.color_scheme["critical"],
+                        "icon": "🚨",
+                        "trend": (
+                            "down"
+                            if sec_metrics.get("critical_events", 0) < 10
+                            else "up"
+                        ),
+                    },
+                    {
+                        "title": "Resolution Rate",
+                        "value": f"{sec_metrics.get('resolution_rate', 0):.1f}%",
+                        "color": self.color_scheme["success"],
+                        "icon": "✅",
+                        "trend": "up",
+                    },
+                    {
+                        "title": "Avg Impact Score",
+                        "value": f"{sec_metrics.get('avg_impact_score', 0):.1f}",
+                        "color": self.color_scheme["warning"],
+                        "icon": "📊",
+                        "trend": "neutral",
+                    },
                 ]
             )
 
-            fig.update_layout(
-                title="Key Performance Indicators",
-                xaxis_title="Metrics",
-                yaxis_title="Values",
-                height=400,
-                font=dict(size=12),
+        # Phishing metrics KPIs
+        if "phishing_metrics" in metrics:
+            phish_metrics = metrics["phishing_metrics"]
+            kpis.extend(
+                [
+                    {
+                        "title": "Phishing Campaigns",
+                        "value": phish_metrics.get("total_campaigns", 0),
+                        "color": self.color_scheme["info"],
+                        "icon": "🎣",
+                        "trend": "neutral",
+                    },
+                    {
+                        "title": "Avg Success Rate",
+                        "value": f"{phish_metrics.get('avg_success_rate', 0):.1f}%",
+                        "color": self.color_scheme["critical"],
+                        "icon": "📈",
+                        "trend": "down",
+                    },
+                    {
+                        "title": "Emails Blocked",
+                        "value": phish_metrics.get("total_blocked", 0),
+                        "color": self.color_scheme["success"],
+                        "icon": "🛡️",
+                        "trend": "up",
+                    },
+                ]
             )
 
-            return self._generate_chart_html(fig, "kpi_cards")
-
-        except Exception as e:
-            return self._create_empty_chart(
-                f"Error creating KPI visualization: {str(e)}"
+        # Compliance metrics KPIs
+        if "compliance_metrics" in metrics:
+            comp_metrics = metrics["compliance_metrics"]
+            kpis.extend(
+                [
+                    {
+                        "title": "Compliance Rate",
+                        "value": f"{comp_metrics.get('compliance_rate', 0):.1f}%",
+                        "color": self.color_scheme["success"],
+                        "icon": "📋",
+                        "trend": "up",
+                    },
+                    {
+                        "title": "Total Controls",
+                        "value": comp_metrics.get("total_controls", 0),
+                        "color": self.color_scheme["primary"],
+                        "icon": "🔧",
+                        "trend": "neutral",
+                    },
+                    {
+                        "title": "Avg Compliance Score",
+                        "value": f"{comp_metrics.get('avg_compliance_score', 0):.1f}",
+                        "color": self.color_scheme["accent"],
+                        "icon": "⭐",
+                        "trend": "up",
+                    },
+                ]
             )
+
+        # Create beautiful HTML KPI cards
+        html_content = """
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin: 20px 0;">
+        """
+
+        for kpi in kpis:
+            trend_arrow = (
+                "📈"
+                if kpi["trend"] == "up"
+                else "📉" if kpi["trend"] == "down" else "➡️"
+            )
+
+            html_content += f"""
+            <div style="
+                background: linear-gradient(135deg, {kpi['color']} 0%, rgba(255,255,255,0.9) 100%);
+                border-radius: 12px;
+                padding: 25px 20px;
+                text-align: center;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+                border: 1px solid {self.color_scheme['light_gray']};
+                position: relative;
+                overflow: hidden;
+            ">
+                <div style="position: absolute; top: 10px; right: 15px; font-size: 20px; opacity: 0.7;">
+                    {kpi['icon']}
+                </div>
+                <div style="position: absolute; bottom: 10px; right: 15px; font-size: 16px; opacity: 0.6;">
+                    {trend_arrow}
+                </div>
+                <div style="
+                    font-family: 'Source Serif Pro', serif;
+                    font-size: 32px;
+                    font-weight: 600;
+                    color: {self.color_scheme['rich_black']};
+                    margin: 10px 0 15px 0;
+                    line-height: 1;
+                ">
+                    {kpi['value']}
+                </div>
+                <div style="
+                    font-size: 12px;
+                    color: {self.color_scheme['slate']};
+                    font-weight: 500;
+                    text-transform: uppercase;
+                    letter-spacing: 0.5px;
+                ">
+                    {kpi['title']}
+                </div>
+            </div>
+            """
+
+        html_content += "</div>"
+
+        return html_content
 
     def create_trend_analysis(
         self, events_df: pd.DataFrame, metric: str = "impact_score"
