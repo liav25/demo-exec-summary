@@ -1,38 +1,48 @@
-# Gen AI Security Report Generator
+# AI Security Analyst
 
-An AI-powered security report generator that creates executive-level security reports with interactive visualizations and AI-generated insights. Perfect for CISOs, CTOs, and security executives who need automated, professional security reporting.
+> **⚠️ ARCHITECTURE UPDATED**  
+> This project has been **refactored** from a Flask monolith to a modern **React TypeScript + FastAPI** architecture.
+> 
+> **👉 See [README_NEW_ARCHITECTURE.md](./README_NEW_ARCHITECTURE.md) for the complete setup guide.**
 
 ## 🚀 Quick Start
 
-### Option 1: Automated Setup (Recommended)
 ```bash
-# Clone and navigate to the project
-cd demo-exec-summary
+# Install all dependencies
+npm run install-all
 
-# Run the quick start script (handles everything automatically)
-python start.py
+# Run both frontend and backend
+npm run dev
 ```
 
-### Option 2: Manual Setup
+**Servers will start at:**
+- **Frontend**: http://localhost:5173 (React app)
+- **Backend**: http://localhost:8000 (API)
+- **API Docs**: http://localhost:8000/docs (Swagger)
+
+## 🏗️ New Architecture
+
+- **Frontend**: React TypeScript SPA with Vite
+- **Backend**: FastAPI with async support
+- **Design**: Same beautiful glassmorphism UI
+- **Features**: Enhanced with TypeScript, form validation, and animations
+
+## 📚 Documentation
+
+- **[Complete Setup Guide](./README_NEW_ARCHITECTURE.md)** - Full architecture documentation
+- **[Hackathon Demo](./HACKATHON_DEMO.md)** - Original demo documentation
+
+## 🔧 Development
+
 ```bash
-# Install dependencies
-pip install -r requirements.txt
-
-# Set up environment (interactive)
-python setup_env.py
-
-# Run the application
-python app.py
+npm run frontend   # Run only React frontend
+npm run backend    # Run only FastAPI backend
+npm run dev        # Run both simultaneously
 ```
 
-### Option 3: Demo Mode (No Setup Required)
-```bash
-# Generate sample reports instantly
-python demo.py
+---
 
-# Interactive demo mode
-python demo.py --interactive
-```
+**The app design and functionality remain exactly the same** - we've just modernized the architecture for better maintainability and development experience!
 
 ## 🎯 Demo & Testing
 
