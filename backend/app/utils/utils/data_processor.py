@@ -1,15 +1,15 @@
 import pandas as pd
 import os
 from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Tuple
-from config import Config
+from typing import Dict, List, Optional, Tuple, Any
+from app.core.config import config
 
 
 class DataProcessor:
     """Handles loading and processing of security data for report generation"""
 
     def __init__(self):
-        self.config = Config()
+        self.data_dir = config.data_dir
         self.data_cache = {}
 
     def load_data(self, filename: str) -> pd.DataFrame:
@@ -17,7 +17,7 @@ class DataProcessor:
         if filename in self.data_cache:
             return self.data_cache[filename].copy()
 
-        filepath = os.path.join(self.config.DATA_DIR, filename)
+        filepath = os.path.join(self.data_dir, filename)
         if not os.path.exists(filepath):
             raise FileNotFoundError(f"Data file not found: {filepath}")
 

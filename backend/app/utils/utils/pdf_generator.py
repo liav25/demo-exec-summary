@@ -2,14 +2,17 @@ from weasyprint import HTML, CSS
 import os
 from datetime import datetime
 from typing import Optional
-from config import Config
+from app.core.config import config
 
 
 class PDFGenerator:
     """Handles PDF generation from HTML content using WeasyPrint"""
 
     def __init__(self):
-        self.config = Config()
+        self.config = config
+        # Ensure reports directory exists
+        self.reports_dir = config.reports_dir
+        os.makedirs(self.reports_dir, exist_ok=True)
 
     def generate_pdf(self, html_content: str, filename: Optional[str] = None) -> str:
         """Generate PDF from HTML content and return the file path"""
@@ -23,7 +26,7 @@ class PDFGenerator:
             filename += ".pdf"
 
         # Create output directory if it doesn't exist
-        output_dir = self.config.REPORTS_DIR
+        output_dir = self.reports_dir
         os.makedirs(output_dir, exist_ok=True)
 
         output_path = os.path.join(output_dir, filename)

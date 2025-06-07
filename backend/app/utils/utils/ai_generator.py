@@ -1,21 +1,19 @@
 import openai
 from typing import Dict, List, Optional
 import json
-from config import Config
+from app.core.config import config
 
 
 class AIGenerator:
     """Handles AI-powered content generation using OpenAI API"""
 
     def __init__(self):
-        self.config = Config()
-        if not self.config.OPENAI_API_KEY:
+        if not config.openai_api_key:
             raise ValueError(
                 "OpenAI API key not found. Please set OPENAI_API_KEY in your .env file."
             )
 
-        openai.api_key = self.config.OPENAI_API_KEY
-        self.client = openai.OpenAI(api_key=self.config.OPENAI_API_KEY)
+        self.client = openai.OpenAI(api_key=config.openai_api_key)
 
     def generate_executive_summary(
         self,
@@ -50,7 +48,7 @@ class AIGenerator:
 
         try:
             response = self.client.chat.completions.create(
-                model=self.config.OPENAI_MODEL,
+                model=config.openai_model,
                 messages=[
                     {
                         "role": "system",
@@ -58,8 +56,9 @@ class AIGenerator:
                     },
                     {"role": "user", "content": prompt},
                 ],
-                max_tokens=500,
-                temperature=0.7,
+                max_tokens=config.openai_max_tokens
+                // 8,  # Use smaller token limit for summary
+                temperature=config.openai_temperature,
             )
 
             return response.choices[0].message.content.strip()
@@ -89,7 +88,7 @@ class AIGenerator:
 
         try:
             response = self.client.chat.completions.create(
-                model=self.config.OPENAI_MODEL,
+                model=config.openai_model,
                 messages=[
                     {
                         "role": "system",
@@ -126,7 +125,7 @@ class AIGenerator:
 
         try:
             response = self.client.chat.completions.create(
-                model=self.config.OPENAI_MODEL,
+                model=config.openai_model,
                 messages=[
                     {
                         "role": "system",
@@ -185,7 +184,7 @@ class AIGenerator:
 
         try:
             response = self.client.chat.completions.create(
-                model=self.config.OPENAI_MODEL,
+                model=config.openai_model,
                 messages=[
                     {
                         "role": "system",
@@ -236,7 +235,7 @@ class AIGenerator:
 
         try:
             response = self.client.chat.completions.create(
-                model=self.config.OPENAI_MODEL,
+                model=config.openai_model,
                 messages=[
                     {
                         "role": "system",

@@ -1,26 +1,34 @@
 import smtplib
-import os
-
-import resend
+import ssl
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email import encoders
-from datetime import datetime
+import os
 from typing import List, Optional, Dict
-from config import Config
+from datetime import datetime
+import resend
+from app.core.config import config, REPORT_TYPES
 
 
 class EmailSender:
     """Handles sending email reports with PDF attachments"""
 
     def __init__(self):
-        self.config = Config()
-
-        # Validate email configuration
-        if not all([self.config.EMAIL_ADDRESS, self.config.EMAIL_PASSWORD]):
+        # Use Resend if API key is available, otherwise fall back to SMTP
+        if config.resend_api_key:
+            resend.api_key = config.resend_api_key
+            self.use_resend = True
+            self.email_address = config.email_address or "noreply@yourdomain.com"
+        elif config.email_address and config.email_password:
+            self.use_resend = False
+            self.smtp_server = config.smtp_server
+            self.smtp_port = config.smtp_port
+            self.email_address = config.email_address
+            self.email_password = config.email_password
+        else:
             raise ValueError(
-                "Email configuration incomplete. Please set EMAIL_ADDRESS and EMAIL_PASSWORD in your .env file."
+                "Email configuration incomplete. Please set either RESEND_API_KEY or EMAIL_ADDRESS/EMAIL_PASSWORD in your .env file."
             )
 
     def send_report(
@@ -79,20 +87,20 @@ class EmailSender:
 
     def _generate_subject(self, report_type: str, period: str) -> str:
         """Generate email subject line"""
-        report_name = self.config.REPORT_TYPES.get(report_type, {}).get(
+        report_name = REPORT_TYPES.get(report_type, {}).get(
             "name", report_type.replace("_", " ").title()
         )
-        company_name = self.config.COMPANY_NAME
+        company_name = config.company_name
 
         return f"{company_name} - {report_name} ({period.replace('_', ' ').title()})"
 
     def _generate_email_body(self, report_type: str, period: str) -> str:
         """Generate HTML email body"""
 
-        report_name = self.config.REPORT_TYPES.get(report_type, {}).get(
+        report_name = REPORT_TYPES.get(report_type, {}).get(
             "name", report_type.replace("_", " ").title()
         )
-        company_name = self.config.COMPANY_NAME
+        company_name = config.company_name
         current_date = datetime.now().strftime("%B %d, %Y")
 
         html_body = f"""
@@ -230,18 +238,18 @@ class EmailSender:
 
         try:
             msg = MIMEMultipart()
-            msg["From"] = self.config.EMAIL_ADDRESS
+            msg["From"] = self.email_address
             msg["To"] = recipient_email
             msg["Subject"] = subject
 
             msg.attach(MIMEText(message, "plain"))
 
-            server = smtplib.SMTP(self.config.SMTP_SERVER, self.config.SMTP_PORT)
+            server = smtplib.SMTP(self.smtp_server, self.smtp_port)
             server.starttls()
-            server.login(self.config.EMAIL_ADDRESS, self.config.EMAIL_PASSWORD)
+            server.login(self.email_address, self.email_password)
 
             text = msg.as_string()
-            server.sendmail(self.config.EMAIL_ADDRESS, recipient_email, text)
+            server.sendmail(self.email_address, recipient_email, text)
             server.quit()
 
             return True
@@ -254,9 +262,9 @@ class EmailSender:
         """Test SMTP connection and authentication"""
 
         try:
-            server = smtplib.SMTP(self.config.SMTP_SERVER, self.config.SMTP_PORT)
+            server = smtplib.SMTP(self.smtp_server, self.smtp_port)
             server.starttls()
-            server.login(self.config.EMAIL_ADDRESS, self.config.EMAIL_PASSWORD)
+            server.login(self.email_address, self.email_password)
             server.quit()
             return True
 
