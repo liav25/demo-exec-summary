@@ -12,70 +12,75 @@ class ChartGenerator:
     """Generates interactive charts using Plotly for security reports"""
 
     def __init__(self):
-        # Define color schemes for consistent branding using soft, beautiful palette
+        # Define color schemes for consistent branding using professional palette
         self.color_scheme = {
-            # Primary colors from the beautiful palette
-            "primary": "#1C4E80",  # Deep Blue
-            "secondary": "#4CB5F5",  # Sky Blue
-            "success": "#6AB187",  # Sage Green
-            "warning": "#DBAE58",  # Golden Yellow
-            "info": "#A5D8DD",  # Soft Teal
-            "critical": "#AC3E31",  # Warm Red
-            "accent": "#488A99",  # Teal
-            # Neutral tones
-            "rich_black": "#23282D",  # Dark Charcoal
-            "charcoal": "#484848",  # Medium Charcoal
-            "slate": "#7E909A",  # Blue Gray
-            "light_gray": "#CED2CC",  # Light Gray
-            "off_white": "#F1F1F1",  # Off White
-            "white": "#FFFFFF",  # Pure White
-            "cream": "#DADADA",  # Light Cream
-            # Severity color mapping with soft palette
+            # Primary colors - Professional palette
+            "primary": "#2563EB",  # Primary Blue
+            "primary_dark": "#1E40AF",  # Dark Blue
+            "primary_light": "#60A5FA",  # Light Blue
+            "secondary": "#8B5CF6",  # Purple
+            "accent": "#14B8A6",  # Teal
+            "success": "#10B981",  # Green
+            "warning": "#F59E0B",  # Amber
+            "error": "#EF4444",  # Red
+            "info": "#3B82F6",  # Info Blue
+            # Neutral colors
+            "gray_900": "#111827",
+            "gray_800": "#1F2937",
+            "gray_700": "#374151",
+            "gray_600": "#4B5563",
+            "gray_500": "#6B7280",
+            "gray_400": "#9CA3AF",
+            "gray_300": "#D1D5DB",
+            "gray_200": "#E5E7EB",
+            "gray_100": "#F3F4F6",
+            "gray_50": "#F9FAFB",
+            "white": "#FFFFFF",
+            # Severity color mapping - Professional
             "severity_colors": {
-                "Critical": "#AC3E31",  # Warm Red
-                "High": "#1C4E80",  # Deep Blue
-                "Medium": "#DBAE58",  # Golden Yellow
-                "Low": "#6AB187",  # Sage Green
-                "Info": "#A5D8DD",  # Soft Teal
+                "Critical": "#EF4444",  # Red
+                "High": "#F59E0B",  # Amber
+                "Medium": "#3B82F6",  # Blue
+                "Low": "#10B981",  # Green
+                "Info": "#6B7280",  # Gray
             },
-            # Status colors with soft palette
+            # Status colors - Professional
             "status_colors": {
-                "Resolved": "#6AB187",  # Sage Green
-                "Investigating": "#4CB5F5",  # Sky Blue
-                "Monitoring": "#DBAE58",  # Golden Yellow
-                "Blocked": "#AC3E31",  # Warm Red
-                "Contained": "#488A99",  # Teal
-                "Active": "#1C4E80",  # Deep Blue
-                "Pending": "#7E909A",  # Blue Gray
+                "Resolved": "#10B981",  # Green
+                "Investigating": "#3B82F6",  # Blue
+                "Monitoring": "#F59E0B",  # Amber
+                "Blocked": "#EF4444",  # Red
+                "Contained": "#8B5CF6",  # Purple
+                "Active": "#14B8A6",  # Teal
+                "Pending": "#6B7280",  # Gray
             },
             # Beautiful gradient combinations
             "gradients": [
-                ["#A5D8DD", "#4CB5F5"],  # Teal to Sky Blue
-                ["#6AB187", "#DBAE58"],  # Green to Gold
-                ["#1C4E80", "#488A99"],  # Deep Blue to Teal
-                ["#F1F1F1", "#CED2CC"],  # Light Gray gradient
-                ["#DBAE58", "#AC3E31"],  # Gold to Red
+                ["#2563EB", "#8B5CF6"],  # Blue to Purple
+                ["#8B5CF6", "#EC4899"],  # Purple to Pink
+                ["#14B8A6", "#10B981"],  # Teal to Green
+                ["#F59E0B", "#EF4444"],  # Amber to Red
+                ["#3B82F6", "#14B8A6"],  # Blue to Teal
             ],
             # Chart-specific color palettes
             "chart_palette": [
-                "#1C4E80",  # Deep Blue
-                "#4CB5F5",  # Sky Blue
-                "#6AB187",  # Sage Green
-                "#DBAE58",  # Golden Yellow
-                "#A5D8DD",  # Soft Teal
-                "#488A99",  # Teal
-                "#AC3E31",  # Warm Red
-                "#7E909A",  # Blue Gray
-                "#23282D",  # Dark Charcoal
-                "#CED2CC",  # Light Gray
+                "#2563EB",  # Primary Blue
+                "#8B5CF6",  # Purple
+                "#14B8A6",  # Teal
+                "#10B981",  # Green
+                "#F59E0B",  # Amber
+                "#EC4899",  # Pink
+                "#EF4444",  # Red
+                "#6B7280",  # Gray
+                "#3B82F6",  # Info Blue
+                "#7C3AED",  # Violet
             ],
-            # Soft background colors for different chart types
+            # Professional backgrounds
             "backgrounds": {
-                "light": "#F1F1F1",
-                "subtle": "rgba(241, 241, 241, 0.3)",
-                "accent": "rgba(165, 216, 221, 0.1)",
-                "warm": "rgba(219, 174, 88, 0.1)",
-                "cool": "rgba(76, 181, 245, 0.1)",
+                "light": "#FFFFFF",
+                "subtle": "#F9FAFB",
+                "accent": "#F3F4F6",
+                "dark": "#111827",
             },
         }
 
@@ -97,28 +102,79 @@ class ChartGenerator:
         # Apply beautiful styling to all charts
         fig.update_layout(
             paper_bgcolor=self.color_scheme["white"],
-            plot_bgcolor=self.color_scheme["backgrounds"]["light"],
+            plot_bgcolor=self.color_scheme["backgrounds"]["subtle"],
             font=dict(
                 family="Inter, -apple-system, BlinkMacSystemFont, sans-serif",
                 size=12,
-                color=self.color_scheme["rich_black"],
+                color=self.color_scheme["gray_800"],
             ),
             title=dict(
                 font=dict(
-                    family="Source Serif Pro, serif",
-                    size=16,
-                    color=self.color_scheme["rich_black"],
+                    family="Inter, sans-serif",
+                    size=18,
+                    color=self.color_scheme["gray_900"],
                 ),
                 x=0.5,
-                y=0.95,
+                y=0.98,
+                xanchor="center",
+                yanchor="top",
             ),
-            margin=dict(l=60, r=60, t=80, b=60),
+            margin=dict(l=40, r=40, t=60, b=40),
             showlegend=True,
             legend=dict(
                 bgcolor="rgba(255, 255, 255, 0.9)",
-                bordercolor=self.color_scheme["light_gray"],
+                bordercolor=self.color_scheme["gray_200"],
                 borderwidth=1,
-                font=dict(size=11),
+                font=dict(size=11, color=self.color_scheme["gray_700"]),
+                orientation="h",
+                yanchor="bottom",
+                y=-0.15,
+                xanchor="center",
+                x=0.5,
+            ),
+            hoverlabel=dict(
+                bgcolor=self.color_scheme["white"],
+                bordercolor=self.color_scheme["gray_300"],
+                font=dict(
+                    family="Inter, sans-serif",
+                    size=12,
+                    color=self.color_scheme["gray_800"],
+                ),
+            ),
+        )
+
+        # Update grid styling
+        fig.update_xaxes(
+            showgrid=True,
+            gridwidth=1,
+            gridcolor=self.color_scheme["gray_100"],
+            zeroline=True,
+            zerolinewidth=1,
+            zerolinecolor=self.color_scheme["gray_200"],
+            linecolor=self.color_scheme["gray_300"],
+            linewidth=1,
+            tickfont=dict(
+                family="Inter, sans-serif", size=11, color=self.color_scheme["gray_600"]
+            ),
+            title_font=dict(
+                family="Inter, sans-serif", size=12, color=self.color_scheme["gray_700"]
+            ),
+        )
+
+        fig.update_yaxes(
+            showgrid=True,
+            gridwidth=1,
+            gridcolor=self.color_scheme["gray_100"],
+            zeroline=True,
+            zerolinewidth=1,
+            zerolinecolor=self.color_scheme["gray_200"],
+            linecolor=self.color_scheme["gray_300"],
+            linewidth=1,
+            tickfont=dict(
+                family="Inter, sans-serif", size=11, color=self.color_scheme["gray_600"]
+            ),
+            title_font=dict(
+                family="Inter, sans-serif", size=12, color=self.color_scheme["gray_700"]
             ),
         )
 
@@ -127,7 +183,7 @@ class ChartGenerator:
                 # Following the Plotly PDF documentation approach
                 # Generate static image for better PDF compatibility
                 width = 800
-                height = 500
+                height = 450
 
                 # Use Plotly's to_image with explicit engine specification
                 img_bytes = fig.to_image(
@@ -138,7 +194,7 @@ class ChartGenerator:
                 # Create HTML template following Plotly documentation pattern
                 template = f"""
                 <div id="{div_id}" style="text-align: center; margin: 20px 0;">
-                    <img style="width: {width}px; height: {height}px; max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);" 
+                    <img style="width: {width}px; height: {height}px; max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);" 
                          src="data:image/png;base64,{img_base64}" 
                          alt="Chart: {div_id}" />
                 </div>
@@ -190,10 +246,17 @@ class ChartGenerator:
                 name="Event Count",
                 marker=dict(
                     color=bar_colors,
-                    line=dict(color=self.color_scheme["light_gray"], width=1),
+                    line=dict(color=self.color_scheme["white"], width=2),
                     pattern=dict(shape=""),
                 ),
                 hovertemplate="<b>%{x}</b><br>Count: %{y}<extra></extra>",
+                text=event_counts.values,
+                textposition="outside",
+                textfont=dict(
+                    size=12,
+                    color=self.color_scheme["gray_700"],
+                    family="Inter, sans-serif",
+                ),
             ),
             row=1,
             col=1,
@@ -212,34 +275,61 @@ class ChartGenerator:
                 values=severity_counts.values,
                 name="Severity Distribution",
                 marker=dict(
-                    colors=colors, line=dict(color=self.color_scheme["white"], width=2)
+                    colors=colors, line=dict(color=self.color_scheme["white"], width=3)
                 ),
-                hole=0.3,  # Donut chart for modern look
+                hole=0.4,  # Donut chart for modern look
                 hovertemplate="<b>%{label}</b><br>Count: %{value}<br>Percentage: %{percent}<extra></extra>",
+                textinfo="label+percent",
+                textfont=dict(
+                    size=13,
+                    color=self.color_scheme["gray_800"],
+                    family="Inter, sans-serif",
+                ),
+                pull=[
+                    0.05 if sev == "Critical" else 0 for sev in severity_counts.index
+                ],  # Emphasize critical
             ),
             row=1,
             col=2,
         )
 
+        # Add center text to donut chart
+        fig.add_annotation(
+            text=f"<b>{severity_counts.sum()}</b><br><span style='font-size:12px'>Total Events</span>",
+            x=0.815,
+            y=0.5,
+            xref="paper",
+            yref="paper",
+            showarrow=False,
+            font=dict(
+                size=18, color=self.color_scheme["gray_800"], family="Inter, sans-serif"
+            ),
+        )
+
         fig.update_layout(
             title_text="Security Events Overview",
             height=450,
+            showlegend=False,
         )
+
+        # Update subplot titles styling
+        for annotation in fig["layout"]["annotations"][
+            :2
+        ]:  # First two are subplot titles
+            annotation["font"] = dict(
+                size=14, color=self.color_scheme["gray_700"], family="Inter, sans-serif"
+            )
 
         fig.update_xaxes(
             title_text="Event Type",
             row=1,
             col=1,
             tickangle=-45,
-            gridcolor=self.color_scheme["light_gray"],
-            gridwidth=1,
         )
         fig.update_yaxes(
             title_text="Number of Events",
             row=1,
             col=1,
-            gridcolor=self.color_scheme["light_gray"],
-            gridwidth=1,
         )
 
         return self._generate_chart_html(fig, "security_events_overview")
@@ -275,13 +365,13 @@ class ChartGenerator:
             height=400,
             xaxis=dict(
                 title="Month",
-                gridcolor=self.color_scheme["light_gray"],
+                gridcolor=self.color_scheme["gray_300"],
                 gridwidth=1,
                 showgrid=True,
             ),
             yaxis=dict(
                 title="Number of Events",
-                gridcolor=self.color_scheme["light_gray"],
+                gridcolor=self.color_scheme["gray_300"],
                 gridwidth=1,
                 showgrid=True,
             ),
@@ -535,7 +625,7 @@ class ChartGenerator:
                     {
                         "title": "Critical Events",
                         "value": sec_metrics.get("critical_events", 0),
-                        "color": self.color_scheme["critical"],
+                        "color": self.color_scheme["error"],
                         "icon": "🚨",
                         "trend": (
                             "down"
@@ -575,7 +665,7 @@ class ChartGenerator:
                     {
                         "title": "Avg Success Rate",
                         "value": f"{phish_metrics.get('avg_success_rate', 0):.1f}%",
-                        "color": self.color_scheme["critical"],
+                        "color": self.color_scheme["error"],
                         "icon": "📈",
                         "trend": "down",
                     },
@@ -637,7 +727,7 @@ class ChartGenerator:
                 padding: 25px 20px;
                 text-align: center;
                 box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-                border: 1px solid {self.color_scheme['light_gray']};
+                border: 1px solid {self.color_scheme['gray_300']};
                 position: relative;
                 overflow: hidden;
             ">
@@ -651,7 +741,7 @@ class ChartGenerator:
                     font-family: 'Source Serif Pro', serif;
                     font-size: 32px;
                     font-weight: 600;
-                    color: {self.color_scheme['rich_black']};
+                    color: {self.color_scheme['gray_900']};
                     margin: 10px 0 15px 0;
                     line-height: 1;
                 ">
@@ -659,7 +749,7 @@ class ChartGenerator:
                 </div>
                 <div style="
                     font-size: 12px;
-                    color: {self.color_scheme['slate']};
+                    color: {self.color_scheme['gray_600']};
                     font-weight: 500;
                     text-transform: uppercase;
                     letter-spacing: 0.5px;
